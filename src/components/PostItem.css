@@ -1,0 +1,14 @@
+.PostItem {
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+.PostItem > h1 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  text-align: left;
+  color: #1aab8a;
+}

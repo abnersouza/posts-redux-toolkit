@@ -1,0 +1,13 @@
+.Posts {
+  padding: 1rem 2rem;
+}
+
+.Posts > h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.Posts__buttonsContainer {
+  display: flex;
+  justify-content: space-between;
+}
