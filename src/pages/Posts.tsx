@@ -4,17 +4,20 @@ import { useHistory } from "react-router-dom";
 
 import PostItem from "../components/PostItem";
 
-import { AppState } from "../store";
-
-import { addPost, getPosts } from "../store/post/actions";
 import { Post } from "../store/post/post";
+
+import { addPost, fetchPosts, postsSelector } from "../slices/posts";
 
 import "./Posts.css";
 
 const Posts = () => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const { posts } = useSelector((state: AppState) => state.posts);
+  const { posts, loading, hasErrors } = useSelector(postsSelector);
+
+  useEffect(() => {
+    dispatch(fetchPosts());
+  }, [dispatch]);
 
   const quotes = [
     "The best thing about a boolean is even if you are wrong, you are only off by a bit. (Anonymous)",
@@ -24,14 +27,17 @@ const Posts = () => {
     "I think Microsoft named .Net so it wouldn’t show up in a Unix directory listing. (Oktal)",
   ];
 
-  const postItems = posts.map((post: Post) => (
-    <PostItem post={post} key={post.id} />
-  ));
+  const renderPosts = () => {
+    if (loading) return <p>Loading posts...</p>;
+    if (hasErrors) return <p>Unable to display posts.</p>;
+
+    return posts.map((post: Post) => <PostItem key={post.id} post={post} />);
+  };
 
   const addNewPost = (e: MouseEvent) => {
     e.preventDefault();
 
-    const newPost = {
+    const newPost: Post = {
       id: posts.length + 1,
       title: `Programming Quotes`,
       body: quotes[Math.floor(Math.random() * 5)],
@@ -51,18 +57,6 @@ const Posts = () => {
     history.push("/");
   };
 
-  useEffect(() => {
-    const POST_URL = "https://jsonplaceholder.typicode.com/posts";
-    fetch(POST_URL, {
-      method: "GET",
-    })
-      .then((res) => res.json())
-      .then((data: Post[]) => {
-        dispatch(getPosts(data.reverse()));
-        // return data;
-      });
-  }, [dispatch]);
-
   return (
     <main className="Posts">
       <h1>My Posts</h1>
@@ -78,7 +72,7 @@ const Posts = () => {
         </button>
       </div>
       <br />
-      {postItems}
+      {renderPosts()}
     </main>
   );
 };
