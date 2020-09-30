@@ -1,10 +1,12 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit'
 import { useDispatch } from 'react-redux'
-import rootReducer from '../slices'
+
+import rootReducer, { RootState } from '../slices'
 
 const store = configureStore({ reducer: rootReducer })
 
+export type AppThunk = ThunkAction<void, RootState, null, Action<string>>
 export type AppDispatch = typeof store.dispatch
-export const useAppDispatch = () => useDispatch<AppDispatch>() // Export a hook that can be reused to resolve types
+export const useAppDispatch = () => useDispatch<AppDispatch>()
 
-export default store;
+export default store

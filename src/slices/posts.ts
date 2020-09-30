@@ -1,5 +1,6 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, Dispatch, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from '.'
+import { AppDispatch, AppThunk } from '../store'
 import { Post } from '../store/post/post'
 import { PostsState } from '../store/post/types'
 
@@ -14,6 +15,9 @@ const postsSlice = createSlice({
   name: 'posts',
   initialState,
   reducers: {
+    addPost: (state, action: PayloadAction<Post>) => {
+      state.posts.unshift(action.payload)
+    },
     getPosts: (state) => {
       state.loading = true
     },
@@ -25,15 +29,12 @@ const postsSlice = createSlice({
     getPostsFailure: (state) => {
       state.loading = false
       state.hasErrors = true
-    },
-    addPost: (state, action: PayloadAction<Post>) => {
-      state.posts = [action.payload].concat(state.posts)
     }
   },
 })
 
-// Three actions generated from the slice
-export const { getPosts, getPostsFailure, getPostsSuccess, addPost } = postsSlice.actions
+// Actions generated from the slice
+const { addPost, getPosts, getPostsFailure, getPostsSuccess } = postsSlice.actions
 
 // A selector
 export const postsSelector = (state: RootState) => state.posts
@@ -42,18 +43,30 @@ export const postsSelector = (state: RootState) => state.posts
 const postReducer = postsSlice.reducer
 export default postReducer
 
-// Asynchronous thunk action
-export function fetchPosts() {
-  // @ts-ignore
-  return async (dispatch) => {
-    try {
-      dispatch(getPosts())
-      const response = await fetch('https://jsonplaceholder.typicode.com/posts')
-      const data: Post[] = await response.json()
+// Actions that have side effect
+export const fetchPosts = (): AppThunk => async (dispatch: AppDispatch) => {
+  try {
+    dispatch(getPosts())
+    const response = await fetch('https://jsonplaceholder.typicode.com/posts')
+    const data: Post[] = await response.json()
 
-      dispatch(getPostsSuccess(data.reverse()))
-    } catch (error) {
-      dispatch(getPostsFailure())
-    }
+    dispatch(getPostsSuccess(data.reverse()))
+  } catch (error) {
+    dispatch(getPostsFailure())
+  }
+}
+
+export const createPost = (title: string, body: string, counter: number): AppThunk => async (dispatch: AppDispatch) => {
+  try {
+    const newPost: Post = {
+      id: ++counter,
+      title,
+      body,
+      userId: Math.random(),
+    };
+
+    dispatch(addPost(newPost))
+  } catch (error) {
+    dispatch(getPostsFailure())
   }
 }

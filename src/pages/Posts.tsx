@@ -1,18 +1,16 @@
 import React, { useEffect, MouseEvent } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import PostItem from "../components/PostItem";
 
+import { useAppDispatch } from "../store";
 import { Post } from "../store/post/post";
-
-import { addPost, fetchPosts, postsSelector } from "../slices/posts";
+import { createPost, fetchPosts, postsSelector } from "../slices/posts";
 
 import "./Posts.css";
 
 const Posts = () => {
-  const dispatch = useDispatch();
-  const history = useHistory();
+  const dispatch = useAppDispatch();
   const { posts, loading, hasErrors } = useSelector(postsSelector);
 
   useEffect(() => {
@@ -36,37 +34,16 @@ const Posts = () => {
 
   const addNewPost = (e: MouseEvent) => {
     e.preventDefault();
+    const title = "Programming Quotes";
+    const quote = quotes[Math.floor(Math.random() * 5)];
 
-    const newPost: Post = {
-      id: posts.length + 1,
-      title: `Programming Quotes`,
-      body: quotes[Math.floor(Math.random() * 5)],
-      userId: Math.random(),
-    };
-
-    dispatch(addPost(newPost));
-  };
-
-  const handleNavigationToArticle = (e: MouseEvent) => {
-    e.preventDefault();
-
-    if (history.length) {
-      history.goBack();
-    }
-
-    history.push("/");
+    dispatch(createPost(title, quote, posts.length));
   };
 
   return (
     <main className="Posts">
       <h1>My Posts</h1>
       <div className="Posts__buttonsContainer">
-        <button
-          className="Posts__backButton"
-          onClick={(e) => handleNavigationToArticle(e)}
-        >
-          Go Back
-        </button>
         <button className="Posts__addPostButton" onClick={(e) => addNewPost(e)}>
           Add Post
         </button>
