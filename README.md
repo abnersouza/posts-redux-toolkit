@@ -19,7 +19,7 @@ The main advantages to using RTK are:
 
 <p align="center"><b>Screenshot</b></p>
 <p align="center">
-  <img src="https://github.com/abnersouza/article-app-with-redux/blob/master/public/assets/screenshots/post.png" alt="Screenshot" />
+  <img src="https://github.com/abnersouza/posts-redux-toolkit/blob/master/public/assets/screenshots/post.png" alt="Screenshot" />
 </p>
 
 ## 🛠 Tech Stack
@@ -38,14 +38,14 @@ Simply click on the “fork” button of the repository page on GitHub.
 Clone the Repository:
 
 ```
-git clone https://github.com/abnersouza/article-app-with-redux.git
+git clone https://github.com/abnersouza/posts-redux-toolkit.git
 ```
 
 ### How to Run, Build and Run the Tests
 
 ```bash
 # Navigate to root directory
-> cd ./article-app-with-redux
+> cd ./posts-redux-toolkit
 
 # Install all dependencies
 > npm install
